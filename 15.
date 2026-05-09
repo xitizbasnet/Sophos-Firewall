@@ -1,0 +1,545 @@
+# Sophos Firewall Backup, Restore & Firmware Upgrade Guide
+
+## 📘 Overview
+
+This document explains how to:
+
+* Perform a **manual backup**
+* Configure an **automatic scheduled backup**
+* Configure **email notifications**
+* Create a **Google App Password**
+* Restore a Sophos Firewall backup
+* Upgrade Sophos Firewall firmware
+* Understand firmware restoration consequences
+* Follow firmware upgrade best practices
+
+---
+
+# 🔐 Sophos Firewall Backup & Restore
+
+## Backup Types
+
+Sophos Firewall supports two types of backup:
+
+1. **Manual Backup**
+2. **Automatic Scheduled Backup**
+
+---
+
+# 🛠️ Manual Backup Procedure
+
+## Step 1: Login to Sophos Firewall
+
+Login to Sophos Firewall using the appropriate administrator credentials.
+
+---
+
+## Step 2: Navigate to Backup & Restore
+
+Go to:
+
+```text
+System > Backup & Firmware > Backup & Restore
+```
+
+---
+
+## Step 3: Fill Up the Backup Settings
+
+Configure the following settings:
+
+| Setting             | Value                        |
+| ------------------- | ---------------------------- |
+| Backup Mode         | Local                        |
+| Backup Prefix       | HO_Sophos_Backup_May_09_2026 |
+| Frequency           | Daily                        |
+| Schedule            | 09:00                        |
+| Encryption Password | *********                    |
+
+---
+
+## Step 4: Start Manual Backup
+
+Click:
+
+```text
+Backup Now
+```
+
+---
+
+## 📝 Note
+
+### Before Clicking "Backup Now"
+
+```text
+Last backup taken on Tue 24 March 2026 09:00:09
+```
+
+### After Clicking "Backup Now"
+
+```text
+Last backup taken on Saturday May 09, 2026 09:00:09
+```
+
+---
+
+## Step 5: Download the Backup File
+
+Click on the **Download Icon** to download the backup file.
+
+Enable the following option:
+
+```text
+☑ Download Encrypted Backup
+```
+
+Then click:
+
+```text
+Download Backup
+```
+
+---
+
+## ✅ Result
+
+The backup file will now be successfully downloaded.
+
+---
+
+# 🔒 Why Encryption Password Is Required
+
+The encryption password protects the backup configuration file from unauthorized access.
+
+Without encryption, anyone with access to the backup file could:
+
+* View firewall settings
+* Access VPN configurations
+* See network information
+* Restore configurations on another device
+
+---
+
+## 💡 Example Scenario
+
+Suppose an employee downloads the firewall backup file and stores it on a USB drive.
+
+If the USB drive is lost or stolen:
+
+* Without encryption → Anyone can open and misuse the firewall configuration.
+* With encryption → The backup file cannot be restored or accessed without the encryption password.
+
+This adds an important layer of security to the backup process.
+
+---
+
+# 📧 Configure Email Settings for Automatic Backup
+
+Before configuring automatic scheduled backups, email settings must be enabled in Sophos Firewall.
+
+---
+
+## Step 1: Navigate to Notification Settings
+
+Go to:
+
+```text
+System > Administration > Notification Settings
+```
+
+---
+
+## 📝 Note
+
+The email used in this example is hosted on Google Email (Gmail).
+
+---
+
+## Step 2: Configure Email Settings
+
+Fill in the following details:
+
+| Setting                         | Value                                       |
+| ------------------------------- | ------------------------------------------- |
+| Send Notification Via           | External Email Server                       |
+| Mail Server IPv4 Address / FQDN | smtp.gmail.com                              |
+| Port                            | 465                                         |
+| Authentication                  | Basic                                       |
+| Username                        | [backup@gmail.com](mailto:backup@gmail.com) |
+| Password                        | ********                                    |
+| Connection Security             | SSL/TLS                                     |
+
+---
+
+## ⚠️ Important Note
+
+The password used here is **NOT** the normal Gmail login password.
+
+It must be generated using a **Google App Password**.
+
+---
+
+## Step 3: Configure Email Addresses
+
+| Setting                            | Value                                         |
+| ---------------------------------- | --------------------------------------------- |
+| From Email Address                 | [backup2@gmail.com](mailto:backup2@gmail.com) |
+| Send Notification To Email Address | [backup@gmail.com](mailto:backup@gmail.com)   |
+| Management Interface IP Address    | port1 - 172.16.16.16                          |
+
+---
+
+## Step 4: Test Email Configuration
+
+Click:
+
+```text
+Test Mail > Send
+```
+
+After successful testing:
+
+```text
+Apply > OK
+```
+
+---
+
+# 🔑 How to Create App Password in Gmail
+
+## Step 1: Login to Gmail
+
+Login to Gmail using your account credentials.
+
+---
+
+## Step 2: Enable 2-Step Verification
+
+To use App Passwords, 2-Step Verification must first be enabled.
+
+Navigate through the following path:
+
+```text
+Settings Icon > See All Settings > Account and Import > Other Google Account Settings > Security & Sign-In > 2-Step Verification
+```
+
+Enable:
+
+```text
+2-Step Verification
+```
+
+---
+
+## Step 3: Search for App Password
+
+Search for:
+
+```text
+App Password
+```
+
+---
+
+## Step 4: Generate App Password
+
+Open:
+
+```text
+App Password
+```
+
+Fill in the necessary information:
+
+| Field    | Value  |
+| -------- | ------ |
+| App Name | Sophos |
+
+Click:
+
+```text
+Create
+```
+
+---
+
+## ✅ Generated App Password Example
+
+```text
+gawr ashj jhds jads
+```
+
+Copy this App Password and use it in the Sophos automated email password field.
+
+Click:
+
+```text
+Done
+```
+
+---
+
+# 📅 Configure Automatic Scheduled Backup
+
+Go back to:
+
+```text
+System > Backup & Firmware > Backup & Restore
+```
+
+---
+
+## Fill Up the Backup Settings
+
+| Setting             | Value                                       |
+| ------------------- | ------------------------------------------- |
+| Backup Mode         | Email                                       |
+| Backup Prefix       | HO_Sophos_Backup_May_09_2026                |
+| Email               | [backup@gmail.com](mailto:backup@gmail.com) |
+| Frequency           | Daily                                       |
+| Schedule            | 09:00                                       |
+| Encryption Password | *********                                   |
+
+---
+
+## Apply Configuration
+
+Click:
+
+```text
+Apply
+```
+
+---
+
+# ♻️ How to Restore Sophos Firewall from Backup File
+
+## Step 1: Navigate to Backup & Restore
+
+Go to:
+
+```text
+System > Backup & Firmware > Backup & Restore
+```
+
+---
+
+## Step 2: Fill Up Restore Settings
+
+| Setting               | Value                                   |
+| --------------------- | --------------------------------------- |
+| Restore Configuration | Choose File (Example: HO_Backup_X_2026) |
+| Encryption Password   | ********                                |
+
+---
+
+## Step 3: Restore Backup
+
+Click:
+
+```text
+Upload and Restore
+```
+
+---
+
+# ⚠️ Consequences of Restoring Firmware in Sophos
+
+Restoring firmware or configuration backups may cause several operational impacts.
+
+---
+
+## Possible Consequences
+
+### 🔄 Work Needs to Be Done Again
+
+Some configurations may require reconfiguration after restoration.
+
+Example:
+
+* VPN tunnels may need to reconnect
+* User sessions may terminate
+* Policies may require validation
+
+---
+
+### ⏱️ Downtime
+
+During restoration:
+
+* Firewall services may restart
+* Internet connectivity may temporarily stop
+* Users may lose network access
+
+---
+
+### 🧩 Firmware Version Must Be Checked
+
+Before restoring a backup:
+
+* Ensure the firmware version is compatible
+* Different firmware versions may cause restoration issues
+
+---
+
+## 💡 Real Scenario Example
+
+A company restored a backup from an older firmware version into a newer Sophos Firewall firmware.
+
+Result:
+
+* Some firewall rules failed
+* VPN services stopped working
+* Administrators had to manually recreate several configurations
+
+This caused unexpected downtime during office hours.
+
+---
+
+# ⬆️ How to Upgrade Sophos Firewall Firmware
+
+---
+
+## Reasons to Upgrade Firmware
+
+Firmware upgrades are important for:
+
+* 🔐 Security patches
+* 🐞 Bug fixes
+* ⚡ Performance improvements
+* 🛡️ Stability enhancements
+* 🆕 New features
+
+---
+
+## ⚠️ Important Recommendation
+
+Always take a backup before performing a firmware upgrade.
+
+---
+
+# 🛠️ Firmware Upgrade Procedure
+
+## Step 1: Navigate to Firmware Section
+
+Go to:
+
+```text
+System > Backup & Firmware > Firmware
+```
+
+---
+
+## Step 2: Check for New Firmware
+
+Under the section:
+
+```text
+Latest Available Firmware
+```
+
+Click:
+
+```text
+Check for New Firmware
+```
+
+---
+
+## Step 3: Download Firmware
+
+Under:
+
+```text
+Action
+```
+
+Click:
+
+```text
+Download
+```
+
+---
+
+## Step 4: Install Firmware
+
+After downloading, the following option will appear:
+
+```text
+Install
+```
+
+Click:
+
+```text
+Install
+```
+
+to proceed.
+
+---
+
+## Step 5: Wait for Completion
+
+Wait until the firmware installation process finishes completely.
+
+The firewall may reboot during this process.
+
+---
+
+# ✅ Best Practices for Firmware Upgrade
+
+## Before Upgrade
+
+* Take a full backup first
+* Verify internet stability
+* Check firmware compatibility
+* Read release notes
+* Schedule maintenance window
+
+---
+
+## During Upgrade
+
+* Do not power off the firewall
+* Monitor installation progress
+* Ensure users are informed about downtime
+
+---
+
+## After Upgrade
+
+* Verify internet connectivity
+* Test VPN connections
+* Check firewall rules
+* Validate services and policies
+* Confirm firmware version updated successfully
+
+---
+
+# 📌 Summary
+
+This guide covered:
+
+* Manual Sophos Firewall backup
+* Automatic scheduled backup
+* Gmail SMTP email configuration
+* Google App Password creation
+* Backup restoration
+* Firmware upgrade process
+* Firmware restoration impacts
+* Upgrade best practices
+
+---
+
+# 🔐 Security Recommendations
+
+* Always use encrypted backups
+* Store backup files securely
+* Use strong encryption passwords
+* Regularly test backup restoration
+* Keep firmware updated with latest security patches
+
+---
